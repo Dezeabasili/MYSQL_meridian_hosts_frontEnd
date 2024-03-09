@@ -89,8 +89,8 @@ const Hotel = () => {
       isMounted = false;
       runOnce.current = true;
     };
-  // }, [hotel_id, axiosWithInterceptors]);
-  }, []);
+  }, [hotel_id, axiosWithInterceptors]);
+  // }, []);
 
 
   const handleSlider = (ind) => {
