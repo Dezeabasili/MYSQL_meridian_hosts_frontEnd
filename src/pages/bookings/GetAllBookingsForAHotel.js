@@ -3,26 +3,25 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useAxiosInterceptors from "../../hooks/useAxiosWithInterceptors";
 import { baseURL } from "../../context/authContext";
 
-const FindReview = () => {
-  const [review_id, setReview_id] = useState();
-
+const GetAllBookingsForAHotel = () => {
+  const [hotelRef, setHotelRef] = useState();
   const axiosWithInterceptors = useAxiosInterceptors();
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation()
+  const pathname = location.pathname
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const resp = await axiosWithInterceptors.get(
-        `/reviews?review_id=${review_id}`
+        `/bookings?hotel_id=${hotelRef}`
       );
       // console.log(resp.data.data);
-      const reviewsToDisplay = [...resp.data.data]
-      navigate("/searchreviewsresults", { state: {reviewsToDisplay} });
-     
+      const bookingsToDisplay = [...resp.data.data]
+      navigate("/searchbookingsresults", { state: {pathname, bookingsToDisplay} });
     } catch (err) {
       if (err.response.data.message) {
-        navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
+        navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
       } else {
         navigate('/somethingwentwrong')
       }
@@ -33,21 +32,21 @@ const FindReview = () => {
     <div className="register">
       <form className="registerContainer" onSubmit={handleSubmit}>
         <h3 className="registerTitle">
-          Provide the review id
+          Provide the hotel reference
         </h3>
 
         <div className="registerDiv">
-          <label htmlFor="review_id">Review Id:</label>
+          <label htmlFor="hotelRef">Hotel reference:</label>
           <input
-            id="review_id"
+            id="hotelRef"
             type="text"
-            value={review_id}
-            onChange={(e) => setReview_id(e.target.value)}
+            value={hotelRef}
+            onChange={(e) => setHotelRef(e.target.value)}
             autoComplete="off"
           />
         </div>
-        
-        <button className="signUpButton" disabled={!review_id }>
+
+        <button className="signUpButton" disabled={!hotelRef}>
           Continue
         </button>
       </form>
@@ -55,4 +54,4 @@ const FindReview = () => {
   );
 };
 
-export default FindReview;
+export default GetAllBookingsForAHotel;

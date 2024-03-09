@@ -1,6 +1,6 @@
 import "./navbar.css";
 import "./../menu/menu.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Link} from "react-router-dom";
 import { useAuthContext } from "../../context/authContext";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -9,9 +9,10 @@ import Menu_RegisteredUser_Structure from "../menu/Menu_RegisteredUser_Structure
 import Menu_Guest_Structure from "../menu/Menu_Guest_Structure";
 
 const Navbar = () => {
-  const { auth, profilePhoto } = useAuthContext();
+  const { auth, profilePhoto, setProfilePhoto } = useAuthContext();
   const screenSize = useWindowSize();
   const [showMenu, setShowMenu] = useState(false);
+
 
   useEffect(() => {
     document.addEventListener("click", handleHide, true);
@@ -24,6 +25,7 @@ const Navbar = () => {
   useEffect(() => {
     setShowMenu(false);
   }, [screenSize]);
+
 
   const handleHide = () => {
     setShowMenu(false);

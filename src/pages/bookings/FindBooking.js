@@ -15,19 +15,20 @@ const FindBooking = () => {
     e.preventDefault();
     try {
       const resp = await axiosWithInterceptors.post(
-        baseURL + "api/v1/bookings/findbooking",
+        "/bookings/findbooking",
         { booking_id: bookingRef, email }
       );
-      console.log(resp.data.data);
+      // console.log(resp.data.data);
       const bookingsToDisplay = [...resp.data.data]
-      navigate("/bookings", { state: {pathname, bookingsToDisplay} });
+      navigate(`/searchbookingsresults`, { state: {pathname, bookingsToDisplay} });
     } catch (err) {
-      if (err.response.data.message) {
-        navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+      if (err.response?.data?.message) {
+        navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
       } else {
         navigate('/somethingwentwrong')
       }
     }
+   
   };
 
   return (

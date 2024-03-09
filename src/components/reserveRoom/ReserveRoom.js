@@ -4,6 +4,7 @@ import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSearchContext } from "../../context/searchContext";
 
+
 const ReserveRoom = ({
   setOpenHotelRooms,
   roomStyleToDisplay,
@@ -16,7 +17,7 @@ const ReserveRoom = ({
 
   const { checkinDateValue, checkoutDateValue } = useSearchContext();
 
-  console.log('checkinDateValue, checkoutDateValue: ', checkinDateValue, checkoutDateValue )
+  // console.log('checkinDateValue, checkoutDateValue: ', checkinDateValue, checkoutDateValue )
  
 
   // get the check-in and check-out dates
@@ -34,13 +35,13 @@ const ReserveRoom = ({
     checkoutDate.setDate(checkinDate.getDate() + 1);
   }
 
-  console.log("checkinDate: ", checkinDate);
-  console.log("checkoutDate: ", checkoutDate);
+  // console.log("checkinDate: ", checkinDate);
+  // console.log("checkoutDate: ", checkoutDate);
 
   //   console.log("roomsArray", hotelRoomsArray);
 
   const updateNewlySelectedRooms = (e) => {
-    console.log("e.target: ", e.target);
+    // console.log("e.target.value: ", e.target.value);
     if (e.target.checked) {
       // add the selected room id to the selected rooms array
       setNewlySelectedRooms([...newlySelectedRooms, e.target.value]);
@@ -53,7 +54,7 @@ const ReserveRoom = ({
     }
   };
 
-  // console.log(selectedRooms)
+  console.log(selectedRooms)
 
   // function to get an array of all the intended reservation dates
   const reservationDates = (firstDay, lastDay) => {
@@ -73,7 +74,7 @@ const ReserveRoom = ({
     let reservationDays = [];
 
     while (startDate < lastDate) {
-      reservationDays.push(new Date(startDate));
+      reservationDays.push(format(new Date(startDate), "yyyy-MM-dd"));
       // increase the day by 1
       startDate.setDate(startDate.getDate() + 1);
     }
@@ -81,19 +82,29 @@ const ReserveRoom = ({
     return reservationDays;
   };
 
+
+
+
+
+  // Continue tomorrow Mar 04, 2024
+
   // get all reservation dates
   ref2.current = reservationDates(checkinDate, checkoutDate);
   // console.log("reservedDates: ", reservedDates);
-  console.log("ref2.current: ", ref2.current);
+  // console.log("ref2.current: ", ref2.current);
+
+  // let checkinDate = new Date(format(rDate, "yyyy/MM/dd"));
 
   // function to determine if the intended reservation dates are available for the particular room number
   const checkRoomAvailability = (roomNumber) => {
-    // console.log(roomNumber.unavailableDates)
+    // console.log("roomNumber.unavailableDates: ", roomNumber.unavailableDates)
     const dateArray = roomNumber.unavailableDates.map((date) =>
       new Date(date).getTime()
     );
+
     return (ref2.current).some((rDate) =>
       dateArray.includes(new Date(rDate).getTime())
+      // dateArray.includes(new Date(format(rDate, "yyyy/MM/dd")).getTime())
     );
   };
 
@@ -145,11 +156,11 @@ const ReserveRoom = ({
                 <div className="roomNumbers">
                   {roomStyleToDisplay?.roomNumbers?.map((roomNumber) => {
                     return (
-                      <div className="room" key={roomNumber?._id}>
+                      <div className="room" key={roomNumber?.number}>
                         <label>{roomNumber?.number}</label>
                         <input
                           type="checkbox"
-                          value={roomNumber?._id}
+                          value={roomNumber?.number}
                           onChange={updateNewlySelectedRooms}
                           disabled={checkRoomAvailability(roomNumber)}
                         />

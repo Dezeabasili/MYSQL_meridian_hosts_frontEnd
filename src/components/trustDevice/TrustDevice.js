@@ -4,11 +4,16 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useAuthContext, baseURL } from "../../context/authContext";
 import {RotatingLines} from 'react-loader-spinner'
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 const TrustDevice = () => {
+  
   const [loading, setLoading] = useState(true);
   const runOnce = useRef(false)
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const { auth, setAuth, trustThisDevice } = useAuthContext();
 
   useEffect(() => {
@@ -17,7 +22,7 @@ const TrustDevice = () => {
         setLoading(true);
         try {
           if (trustThisDevice) {
-            const res = await axios.get(baseURL + "api/v1/auth/renew_access_token", {
+            const res = await axios.get("/auth/renew_access_token", {
               withCredentials: true,
             });
             const accessToken = res.data.accessToken;
@@ -31,7 +36,11 @@ const TrustDevice = () => {
             });
           }
         } catch (err) {
-          console.log(err);
+          if (err.response.data.message) {
+            navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+          } else {
+            navigate('/somethingwentwrong')
+          }
         } finally {
           setLoading(false);
         }

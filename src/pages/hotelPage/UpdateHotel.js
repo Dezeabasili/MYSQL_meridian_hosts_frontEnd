@@ -19,7 +19,7 @@ const UpdateHotel = () => {
   const [error, setError] = useState(null);
   const axiosWithInterceptors = useAxiosInterceptors();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const runOnce = useRef(false);
 
   const errorDiv = error ? <div className="error">{error}</div> : "";
@@ -30,20 +30,23 @@ const UpdateHotel = () => {
         setLoading(true);
         setError(null);
         try {
-          const resp = await axiosWithInterceptors.get(baseURL + "api/v1/hotels/allcityrefs");
+          const resp = await axiosWithInterceptors.get("/hotels/allcityrefs");
           // console.log("hotels: ", resp.data.data);
           setCityData([...resp.data.data]);
 
           const resp2 = await axiosWithInterceptors.get(
-            baseURL + "api/v1/hotels/allhoteltyperefs"
+            "/hotels/allhoteltyperefs"
           );
           // console.log("hotels: ", resp.data.data);
           setHotelTypeData([...resp2.data.data]);
 
           setLoading(false);
         } catch (err) {
-          console.log(err.message);
-          setError(err.response.data.message);
+          if (err.response.data.message) {
+            navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
+          } else {
+            navigate('/somethingwentwrong')
+          }
         }
       };
 
@@ -60,18 +63,35 @@ const UpdateHotel = () => {
 
     try {
       const resp = await axiosWithInterceptors.patch(
-        baseURL + `api/v1/hotels/${location.state}`,
-        { name, city, type, address, description, manager, addStaff, removeStaff }
+        `/hotels/${location.state}`,
+        {
+          name,
+          city,
+          type,
+          address,
+          description,
+          manager,
+          addStaff,
+          removeStaff,
+        }
       );
       // console.log(resp.data.data);
       navigate(`/hotels/${location.state}`);
     } catch (err) {
-      console.log(err);
-      setError(err.response.data.message);
+      if (err.response.data.message) {
+        navigate("/handleerror", {
+          state: {
+            message: err.response.data.message,
+            path: location.pathname,
+          },
+        });
+      } else {
+        navigate("/somethingwentwrong");
+      }
     }
   };
+  // };
 
-  
   const handleSelectChange = (e) => {
     setCity(e.target.value);
   };
@@ -97,24 +117,24 @@ const UpdateHotel = () => {
         )}
       </>
       <>
-          {!loading && <form className="registerContainer" onSubmit={handleSubmit}>
-        <h3 className="registerTitle">
-          Provide only the hotel information to change 
-        </h3>
+        {!loading && (
+          <form className="registerContainer" onSubmit={handleSubmit}>
+            <h3 className="registerTitle">
+              Provide only the hotel information to change
+            </h3>
 
-        <div className="registerDiv">
-          <label htmlFor="hotelName">Hotel name:</label>
-          <input
-            id="hotelName"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoComplete="off"
-          />
-        </div>
+            <div className="registerDiv">
+              <label htmlFor="hotelName">Hotel name:</label>
+              <input
+                id="hotelName"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                autoComplete="off"
+              />
+            </div>
 
-        
-        <div className="registerDiv">
+            <div className="registerDiv">
               <label htmlFor="city">Select a city:</label>
               <select id="city" onChange={handleSelectChange}>
                 <option
@@ -127,8 +147,8 @@ const UpdateHotel = () => {
                 {cityData?.map((selectedCity) => (
                   <option
                     style={{ textTransform: "capitalize" }}
-                    key={selectedCity._id}
-                    value={selectedCity._id}
+                    key={selectedCity.id_cities}
+                    value={selectedCity.id_cities}
                   >
                     {selectedCity.cityName}
                   </option>
@@ -149,78 +169,87 @@ const UpdateHotel = () => {
                 {hotelTypeData?.map((selectedType) => (
                   <option
                     style={{ textTransform: "capitalize" }}
-                    key={selectedType._id}
-                    value={selectedType._id}
+                    key={selectedType.id_hotelTypes}
+                    value={selectedType.id_hotelTypes}
                   >
                     {selectedType.hotelType}
                   </option>
                 ))}
               </select>
             </div>
-  
- 
-        <div className="registerDiv">
-          <label htmlFor="hotelAddress">Hotel address:</label>
-          <input
-            id="hotelAddress"
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            autoComplete="off"
-          />
-        </div>
-        <div className="registerDiv">
-          <label htmlFor="hotelDesc">Hotel description:</label>
-          <textarea
-            id="hotelDesc"
-            onChange={(e) => setDescription(e.target.value)}
-            autoComplete="off"
-            rows="5"
-            cols="30"
-          >
-            {description}
-          </textarea>
-        </div>
-        <div className="registerDiv">
-          <label htmlFor="hotelManager">Hotel Manager:</label>
-          <input
-            id="hotelManager"
-            type="text"
-            value={manager}
-            onChange={(e) => setManager(e.target.value)}
-            autoComplete="off"
-          />
-        </div>
-        <div className="registerDiv">
-          <label htmlFor="hotelStaff">Add one or more staff:</label>
-          <input
-            id="hotelStaff"
-            type="text"
-            value={addStaff}
-            onChange={(e) => setAddStaff(e.target.value)}
-            autoComplete="off"
-          />
-        </div>
-        <div className="registerDiv">
-          <label htmlFor="hotelStaff2">Remove one or more staff:</label>
-          <input
-            id="hotelStaff2"
-            type="text"
-            value={removeStaff}
-            onChange={(e) => setRemoveStaff(e.target.value)}
-            autoComplete="off"
-          />
-        </div>
 
-        <button className="signUpButton" disabled={!name && !city && !type && !address && !description && !manager && !addStaff && !removeStaff}>
-          Continue
-        </button>
-      </form>}
+            {/* <div className="registerDiv">
+              <label htmlFor="hotelAddress">Hotel address:</label>
+              <input
+                id="hotelAddress"
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                autoComplete="off"
+              />
+            </div> */}
+            <div className="registerDiv">
+              <label htmlFor="hotelDesc">Hotel description:</label>
+              <textarea
+                id="hotelDesc"
+                onChange={(e) => setDescription(e.target.value)}
+                autoComplete="off"
+                rows="5"
+                cols="30"
+              >
+                {description}
+              </textarea>
+            </div>
+            <div className="registerDiv">
+              <label htmlFor="hotelManager">Hotel Manager:</label>
+              <input
+                id="hotelManager"
+                type="text"
+                value={manager}
+                onChange={(e) => setManager(e.target.value)}
+                autoComplete="off"
+              />
+            </div>
+            <div className="registerDiv">
+              <label htmlFor="hotelStaff">Add a staff:</label>
+              <input
+                id="hotelStaff"
+                type="text"
+                value={addStaff}
+                onChange={(e) => setAddStaff(e.target.value)}
+                autoComplete="off"
+              />
+            </div>
+            <div className="registerDiv">
+              <label htmlFor="hotelStaff2">Remove a staff:</label>
+              <input
+                id="hotelStaff2"
+                type="text"
+                value={removeStaff}
+                onChange={(e) => setRemoveStaff(e.target.value)}
+                autoComplete="off"
+              />
+            </div>
+
+            <button
+              className="signUpButton"
+              disabled={
+                !name &&
+                !city &&
+                !type &&
+                !address &&
+                !description &&
+                !manager &&
+                !addStaff &&
+                !removeStaff
+              }
+            >
+              Continue
+            </button>
+          </form>
+        )}
       </>
-      <>
-      {error && errorDiv}
-      </>
-      
+      <>{error && errorDiv}</>
     </div>
   );
 };

@@ -19,7 +19,7 @@ const Logout = () => {
           // clear the access token from memory
           setAuth({});
           // clear the cookie
-          await axios.get(baseURL + "api/v1/auth/logout", { withCredentials: true });
+          await axios.get("/auth/logout", { withCredentials: true });
           localStorage.clear();
           setProfilePhoto('')
           setLoading(false);

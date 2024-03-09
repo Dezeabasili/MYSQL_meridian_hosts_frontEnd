@@ -22,16 +22,16 @@ const CreateRoom = () => {
       let roomNumbers = [];
       
       givenRoomNumbers?.forEach(givenRoom => {
-        let Obj = {}
-        Obj.number = givenRoom.trim() * 1
-        Obj.unavailableDates = []
-        roomNumbers.push(Obj)
+        // let Obj = {}
+        // Obj.number = givenRoom.trim() * 1
+        // Obj.unavailableDates = []
+        roomNumbers.push(givenRoom.trim() * 1)
       })
     
-      console.log(roomNumbers);
+      // console.log(roomNumbers);
 
 
-      const resp = await axiosWithInterceptors.post(baseURL + "api/v1/rooms", {
+      const resp = await axiosWithInterceptors.post("/rooms", {
         title,
         hotel,
         description,
@@ -39,7 +39,7 @@ const CreateRoom = () => {
         maxPeople,
         roomNumbers
       });
-      console.log(resp.data.data);
+      // console.log(resp.data.data);
       navigate("/rooms");
     } catch (err) {
       if (err.response.data.message) {
@@ -57,7 +57,7 @@ const CreateRoom = () => {
         <h3 className="registerTitle">Provide room details</h3>
 
         <div className="registerDiv">
-          <label htmlFor="hotelRef">Hotel name:</label>
+          <label htmlFor="hotelRef">Hotel reference:</label>
           <input
             id="hotelRef"
             type="text"

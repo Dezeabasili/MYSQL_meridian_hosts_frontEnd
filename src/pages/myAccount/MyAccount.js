@@ -8,10 +8,12 @@ import { baseURL } from "../../context/authContext";
 import { RotatingLines } from "react-loader-spinner";
 
 const MyAccount = () => {
-  const runOnce = useRef(false);
+  const defaultProfilePhoto =
+    "https://res.cloudinary.com/dmth3elzl/image/upload/v1705633392/profilephotos/edeo8b4vzeppeovxny9c.png";
   const [openModal, setOpenModal] = useState(false);
   const [userInfo, setUserInfo] = useState();
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const { setAuth, profilePhoto, setProfilePhoto } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,45 +22,38 @@ const MyAccount = () => {
   const axiosWithInterceptors = useAxiosInterceptors();
 
   useEffect(() => {
-    if (runOnce.current === false) {
-      const loadUser = async () => {
-        try {
-          setLoading(true);
-          const resp = await axiosWithInterceptors.get(
-            baseURL + "api/v1/users/myaccount",
-            {
-              withCredentials: true,
-            }
-          );
-          setUserInfo({ ...resp.data.data });
-          setProfilePhoto(resp.data.data.photo);
-          localStorage.setItem(
-            "profilePhoto",
-            JSON.stringify(resp.data.data.photo)
-          );
+    const loadUser = async () => {
+      try {
+        // console.log('profilePhoto: ', profilePhoto)
+        setLoading(true);
+        setRefresh(false);
+        const resp = await axiosWithInterceptors.get("/users/myaccount", {
+          withCredentials: true,
+        });
+        setUserInfo({ ...resp.data.data });
+        setProfilePhoto(resp.data.data.photo);
+        localStorage.setItem(
+          "profilePhoto",
+          JSON.stringify(resp.data.data.photo)
+        );
 
-          setLoading(false);
-        } catch (err) {
-          if (err.response.data.message) {
-            navigate("/handleerror", {
-              state: {
-                message: err.response.data.message,
-                path: location.pathname,
-              },
-            });
-          } else {
-            navigate("/somethingwentwrong");
-          }
+        setLoading(false);
+      } catch (err) {
+        if (err.response.data.message) {
+          navigate("/handleerror", {
+            state: {
+              message: err.response.data.message,
+              path: location.pathname,
+            },
+          });
+        } else {
+          navigate("/somethingwentwrong");
         }
-      };
-
-      loadUser();
-    }
-
-    return () => {
-      runOnce.current = true;
+      }
     };
-  }, []);
+
+    loadUser();
+  }, [refresh, setRefresh]);
 
   const choosePhoto = () => {
     // Specify the types of files, the size limit in MB, and whether its a single or multiple files
@@ -72,12 +67,29 @@ const MyAccount = () => {
     navigate("/uploadfiles", { state: fileOptions });
   };
 
+  const deletePhoto = async () => {
+    try {
+      await axiosWithInterceptors.delete("/users/myaccount/deletemyphoto");
+
+      setRefresh(true);
+    } catch (err) {
+      if (err.response.data.message) {
+        navigate("/handleerror", {
+          state: {
+            message: err.response.data.message,
+            path: location.pathname,
+          },
+        });
+      } else {
+        navigate("/somethingwentwrong");
+      }
+    }
+  };
+
   const deleteAccount = async () => {
     try {
-      await axiosWithInterceptors.delete(
-        baseURL + "api/v1/users/deletemyaccount"
-      );
-      await axios.get(baseURL + "api/v1/auth/logout", {
+      await axiosWithInterceptors.delete("/users/deletemyaccount");
+      await axios.get("/auth/logout", {
         withCredentials: true,
       });
       setAuth({});
@@ -133,9 +145,17 @@ const MyAccount = () => {
             />
           </div>
 
-          <button onClick={choosePhoto}>Edit profile photo</button>
+          <button onClick={choosePhoto}>Change profile photo</button>
 
           <br />
+
+          {defaultProfilePhoto != profilePhoto && (
+            <>
+              <button onClick={deletePhoto}>Delete profile photo</button>
+
+              <br />
+            </>
+          )}
 
           <Link to={"/changepassword"}>
             <button>Change password</button>

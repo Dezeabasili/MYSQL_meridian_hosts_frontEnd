@@ -36,7 +36,7 @@ const GetRoom = () => {
             roomStyle = location.state
 
           } else {
-            const resp = await axiosWithInterceptors.get(baseURL + `api/v1/rooms/${room_id}`);
+            const resp = await axiosWithInterceptors.get(`/rooms/${room_id}`);
             setRoomToDisplay({ ...resp.data.data });
             roomStyle = resp.data.data
           }
@@ -66,7 +66,7 @@ const GetRoom = () => {
 
   const deleteThisRoom = async () => {
     try {
-      await axiosWithInterceptors.delete(baseURL + `api/v1/rooms/${room_id}`);
+      await axiosWithInterceptors.delete(`/rooms/${room_id}`);
       navigate("/rooms");
     } catch (err) {
       if (err.response.data.message) {
@@ -78,7 +78,7 @@ const GetRoom = () => {
   };
 
   const updateThisRoom = () => {
-    navigate("/rooms/updateroom", { state: roomToDisplay._id });
+    navigate("/rooms/updateroom", { state: roomToDisplay.id_roomStyleDescription });
   };
 
   const updateRoomPhoto = () => {
@@ -154,15 +154,15 @@ const GetRoom = () => {
               </>
             )}
           </div>
-          <p>Room reference: {roomToDisplay._id}</p>
-          <p>Hotel name: <span style={{"textTransform": "capitalize"}}>{roomToDisplay.hotel.name}</span></p>
+          <p>Room reference: {roomToDisplay.id_roomStyleDescription}</p>
+          <p>Hotel name: <span style={{"textTransform": "capitalize"}}><strong>{roomToDisplay.hotel.name}</strong></span></p>
           <p>Room title: <span style={{"textTransform": "capitalize"}}>{roomToDisplay.title}</span></p>
           <p>Room price: ${roomToDisplay.price}</p>
           <p>Room description: {roomToDisplay.description}</p>
           <p>Maximum number of occupants: {roomToDisplay.maxPeople}</p>
 
-          {roomToDisplay.roomNumbers?.map((roomNumber) => (
-            <div key={roomNumber._id}>
+          {roomToDisplay.roomNumbers?.map((roomNumber, i) => (
+            <div key={i}>
               <br />
               <p>Room number: {roomNumber.number}</p>
             </div>

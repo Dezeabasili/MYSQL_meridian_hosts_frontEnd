@@ -19,11 +19,11 @@ const GetAllUsers = () => {
         try {
           if (location.state) {
               setUsersList(location.state);
-              console.log('location.state: ', location.state)
+              // console.log('location.state: ', location.state)
           
           } else {
-            const resp = await axiosWithInterceptors.get(baseURL + "api/v1/users");
-            console.log("users: ", resp.data.data);
+            const resp = await axiosWithInterceptors.get("/users");
+            // console.log("users: ", resp.data.data);
             setUsersList([...resp.data.data]);
           }
   

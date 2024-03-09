@@ -25,7 +25,7 @@ const UpdateRoom = () => {
     setOpenHotelModal(false);
     try {
       const resp = await axiosWithInterceptors.patch(
-        baseURL + `api/v1/rooms/${location.state}`,
+        `/rooms/${location.state}`,
         { title, price, maxPeople, description, addRooms, hotel, removeRooms }
       );
       // console.log(resp.data.data);
@@ -41,19 +41,18 @@ const UpdateRoom = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // continue tonight
 
     if (hotel || removeRooms) {
       setOpenHotelModal(true);
-      console.log("Modal is open");
+      // console.log("Modal is open");
       return;
     } else {
       try {
         const resp = await axiosWithInterceptors.patch(
-          baseURL + `api/v1/rooms/${location.state}`,
+          `/rooms/${location.state}`,
           { title, price, maxPeople, description, addRooms }
         );
-        console.log(resp.data.data);
+        // console.log(resp.data.data);
         navigate(`/rooms/${location.state}`);
       } catch (err) {
         if (err.response.data.message) {
@@ -70,9 +69,9 @@ const UpdateRoom = () => {
       <form className="registerContainer" onSubmit={handleSubmit}>
         <h3 className="registerTitle">Provide the room details to update</h3>
 
-        {!removeRooms && 
+        {/* {!removeRooms && 
             <div className="registerDiv">
-            <label htmlFor="hotelName">Hotel name:</label>
+            <label htmlFor="hotelName">Hotel reference:</label>
             <input
               id="hotelName"
               type="text"
@@ -82,7 +81,7 @@ const UpdateRoom = () => {
             />
           </div>
         }
-        
+         */}
         
         <div className="registerDiv">
           <label htmlFor="roomTitle">Room title:</label>
@@ -171,11 +170,10 @@ const UpdateRoom = () => {
           <div className="hotelChangeModal">
             <div className="hotelChangeModalContainer">
               <p>
-                Changing the hotel name will cancel all the bookings associated
-                with all the rooms listed under this room title. Removing a room
-                number will also cancel all the bookings associated with that
-                room number. This operation is not reversible. Do you wish to
-                continue?
+                Removing a room number will cancel 
+                all the bookings associated with that
+                room number. This operation is not reversible. 
+                Do you wish to continue?
               </p>
               <div>
                 <button onClick={() => handleContinue()}>Continue</button>

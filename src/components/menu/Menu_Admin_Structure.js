@@ -16,6 +16,12 @@ const Menu_Admin_Structure = () => {
             Get all bookings
           </NavLink>
         </li>
+        
+        <li>
+          <NavLink end to={"/bookingsforahotel"}>
+            Get all bookings for a hotel
+          </NavLink>
+        </li>
 
         <li>
           <NavLink to={"/bookings/findbooking"}>
@@ -79,9 +85,9 @@ const Menu_Admin_Structure = () => {
             <strong>Reviews</strong>
           </p>
         </li>
-        <li>
+        {/* <li>
           <NavLink to={"/createreview"}>Write a review</NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink end to={"/reviews"}>
             Get all reviews

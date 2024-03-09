@@ -14,11 +14,11 @@ const CreateHotelCity = () => {
     e.preventDefault();
     try {
 
-      const resp = await axiosWithInterceptors.post(baseURL + "api/v1/hotels/createcity", {
+      const resp = await axiosWithInterceptors.post("/hotels/createcity", {
         cityName  
       });
-      console.log(resp.data.data);
-      navigate("/hotels");
+      // console.log(resp.data.data);
+      navigate("/");
     } catch (err) {
       if (err.response.data.message) {
         navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})

@@ -18,14 +18,14 @@ const UpdateUser = () => {
 
     try {
       let resp = await axiosWithInterceptors.patch(
-        baseURL + "api/v1/users/updateuser",
+        "/users/updateuser",
         { roles, active, email }
       );
 
       if (resp.data.data.matchedCount === 1) {
         try {
           const resp2 = await axiosWithInterceptors.post(
-            baseURL + "api/v1/users/finduser",
+            "/users/finduser",
             {
               email,
             }
@@ -67,8 +67,7 @@ const UpdateUser = () => {
         <h1 className="registerTitle">Update user details</h1>
         <div className="registerDiv">
           <p>
-            Provide user e-mail in order to update user role, disable or enable
-            user
+            Provide user e-mail in order to update user's role
           </p>
           <br />
           <label htmlFor="email">User e-mail:</label>
@@ -91,7 +90,7 @@ const UpdateUser = () => {
             autoComplete="off"
           />
         </div>
-        <div className="registerDiv">
+        {/* <div className="registerDiv">
           <label htmlFor="active">Set user to active?:</label>
           <input
             id="active"
@@ -101,11 +100,12 @@ const UpdateUser = () => {
             autoComplete="off"
             placeholder="Yes or No"
           />
-        </div>
+        </div> */}
 
         <button
           className="signUpButton"
-          disabled={!(email && roles) && !(email && active)}
+          // disabled={!(email && roles) && !(email && active)}
+          disabled={!email || !roles }
         >
           Continue
         </button>

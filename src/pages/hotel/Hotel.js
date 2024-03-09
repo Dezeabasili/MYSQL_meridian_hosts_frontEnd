@@ -14,6 +14,7 @@ import { baseURL } from "../../context/authContext";
 import {RotatingLines} from 'react-loader-spinner'
 
 const Hotel = () => {
+  const runOnce = useRef(false);
   const ref2 = useRef([]);
   const [slideNumber, setSlideNumber] = useState(0);
   const [slides, setSlides] = useState([]);
@@ -26,29 +27,34 @@ const Hotel = () => {
   const [newlySelectedRooms, setNewlySelectedRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const { hotel_id } = useParams();
+
   const navigate = useNavigate();
   const location = useLocation();
   const { auth } = useAuthContext();
   const axiosWithInterceptors = useAxiosInterceptors();
 
-  console.log("selectedRooms: ", selectedRooms);
+  // console.log("selectedRooms: ", selectedRooms);
   // console.log(roomOptions)
 
   useEffect(() => {
     let isMounted = true;
+    if (runOnce.current === false) {
+      // let isMounted = true;
     const hotelData = async () => {
       try {
         setLoading(true);
-        const res = await axiosWithInterceptors.get(baseURL + `api/v1/hotels/${hotel_id}`);
+        // const res = await axiosWithInterceptors.get(`/hotels/${hotel_id}`);
+        const res = await axiosWithInterceptors.get(`/hotels/${hotel_id}`);
         // console.log('res.data.data: ', res.data.data)
         setHotelInfo({ ...res.data.data });
 
         const res2 = await axiosWithInterceptors.get(
-          baseURL + `api/v1/hotels/room/${hotel_id}`
+          `/hotels/room/${hotel_id}`
         );
 
         setRoomInfo([...res2.data.data]);
         const roomStyleArr = res2.data.data
+        // console.log("roomStyleArr: ", roomStyleArr)
 
           let arr = []
           roomStyleArr.forEach(roomStyle => {
@@ -63,7 +69,8 @@ const Hotel = () => {
 
           setSlides([...arr])
 
-        isMounted && setLoading(false);
+        // isMounted && setLoading(false);
+        setLoading(false);
       } catch (err) {
         if (err.response.data.message) {
           navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
@@ -75,10 +82,15 @@ const Hotel = () => {
 
     hotelData();
 
+    }
+    
+
     return () => {
       isMounted = false;
+      runOnce.current = true;
     };
-  }, [hotel_id, axiosWithInterceptors]);
+  // }, [hotel_id, axiosWithInterceptors]);
+  }, []);
 
 
   const handleSlider = (ind) => {
@@ -126,7 +138,7 @@ const Hotel = () => {
 
   const reserveRooms = async () => {
     try {
-      console.log("selectedRooms:", selectedRooms);
+      // console.log("selectedRooms:", selectedRooms);
       if (selectedRooms.length > 0) {
         setSelectedRooms((prev) => {
           newlySelectedRooms.forEach((data) => {
@@ -143,7 +155,7 @@ const Hotel = () => {
 
       // send data to process payment
       const resp = await axiosWithInterceptors.post(
-        baseURL + "api/v1/stripe/create-checkout-session",
+        "/stripe/create-checkout-session",
         { selectedRooms, reservedDates: ref2.current, hotel_id }
       );
     
@@ -185,13 +197,13 @@ const Hotel = () => {
                 <div className="hotelInfo">
                   <div className="hotelInfoForRooms">
                     <h3 className="Hotel_Hotel_Name">{hotelInfo.name}</h3>
-                    <p className="Hotel_Hotel_Address">{hotelInfo.hotelLocation.address}</p>
-                    {hotelInfo.distanceToClosestTouristLocation &&
-                      hotelInfo.closestTouristLocation && (
+                    <p className="Hotel_Hotel_Address">{hotelInfo?.hotelLocation?.address}</p>
+                    {hotelInfo?.distanceToClosestTouristLocation &&
+                      hotelInfo?.closestTouristLocation && (
                         <h4>
                           Excellent location -{" "}
-                          {hotelInfo.distanceToClosestTouristLocation} miles
-                          from {hotelInfo.closestTouristLocation}
+                          {hotelInfo?.distanceToClosestTouristLocation} miles
+                          from {hotelInfo?.closestTouristLocation}
                         </h4>
                       )}
                     <h5>
@@ -277,20 +289,7 @@ const Hotel = () => {
                 <div className="hotelDecs">
                   <div className="hotelDecs1">
                     <h3>{hotelInfo.description}</h3>
-                    <p>
-                      A 10-minute walk from Houston Zoo, Locale Medical Center -
-                      Houston features sustainable 4-star accommodations in the
-                      Medical Center district of Houston. Complimentary Wifi is
-                      available throughout the property and private parking is
-                      available on site. This 4-star condo hotel offers private
-                      entrance. The units come with parquet floors and feature a
-                      fully equipped kitchen with a dishwasher, a dining area, a
-                      flat-screen TV, and a private bathroom with walk-in shower
-                      and a hair dryer. An oven, a microwave, and toaster are
-                      also offered, as well as a coffee machine and a kettle. At
-                      the condo hotel, every unit comes with bed linen and
-                      towels.
-                    </p>
+                    <p>{hotelInfo.detailedDescription}</p>
                   </div>
                   <div className="hotelDecs2">
                     <h4>Will exceed your expectations</h4>

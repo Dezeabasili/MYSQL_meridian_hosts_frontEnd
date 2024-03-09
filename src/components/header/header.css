@@ -67,7 +67,7 @@
   height: 30px;
 }
 
-.headerSearchItemTopDiv .headerSearchIcon1 {
+.headerSearchItemTopDiv .headerSearchIcon {
   margin-right: 10px;
 }
 
@@ -139,6 +139,31 @@
 
 .datepicker {
   width: 100%;
+}
+
+.selectDestination {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(127, 255, 212, 0.5);
+  z-index: 1;
+}
+
+.selectDestinationDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  background-color: whitesmoke;
+  color: black;
+  border-radius: 10px;
 }
 
 @media screen and (max-width: 1030px) {

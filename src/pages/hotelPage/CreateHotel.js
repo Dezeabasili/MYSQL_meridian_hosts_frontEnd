@@ -8,15 +8,15 @@ const CreateHotel = () => {
   const [name, setName] = useState();
   const [city, setCity] = useState();
   const [type, setType] = useState();
-  const [coordinates, setCoordinates] = useState();
-  const [address, setAddress] = useState();
+  // const [coordinates, setCoordinates] = useState();
+  // const [address, setAddress] = useState();
   const [description, setDescription] = useState();
   const [detailedDescription, setDetailedDescription] = useState();
-  const [closestTouristLocation, setClosestTouristLocation] = useState();
-  const [
-    distanceToClosestTouristLocation,
-    setDistanceToClosestTouristLocation,
-  ] = useState();
+  // const [closestTouristLocation, setClosestTouristLocation] = useState();
+  // const [
+  //   distanceToClosestTouristLocation,
+  //   setDistanceToClosestTouristLocation,
+  // ] = useState(0);
   const [manager, setManager] = useState();
   const [staff, setStaff] = useState();
   const [cityData, setCityData] = useState();
@@ -25,6 +25,7 @@ const CreateHotel = () => {
   const axiosWithInterceptors = useAxiosInterceptors();
   const navigate = useNavigate();
   const location = useLocation();
+  const pathname = location.pathname
   const runOnce = useRef(false);
 
   useEffect(() => {
@@ -33,13 +34,13 @@ const CreateHotel = () => {
         setLoading(true);
         try {
           const resp = await axiosWithInterceptors.get(
-            baseURL + "api/v1/hotels/allcityrefs"
+            "/hotels/allcityrefs"
           );
           // console.log("hotels: ", resp.data.data);
           setCityData([...resp.data.data]);
 
           const resp2 = await axiosWithInterceptors.get(
-            baseURL + "api/v1/hotels/allhoteltyperefs"
+            "/hotels/allhoteltyperefs"
           );
           // console.log("hotels: ", resp.data.data);
           setHotelTypeData([...resp2.data.data]);
@@ -65,11 +66,11 @@ const CreateHotel = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const givenCoordinates = coordinates.split(",");
-      let coordinatesToNumbers = [];
-      coordinatesToNumbers.push(givenCoordinates[1] * 1);
-      coordinatesToNumbers.push(givenCoordinates[0] * 1);
-      console.log(coordinatesToNumbers);
+      // const givenCoordinates = coordinates.split(",");
+      // let coordinatesToNumbers = [];
+      // coordinatesToNumbers.push(givenCoordinates[1] * 1);
+      // coordinatesToNumbers.push(givenCoordinates[0] * 1);
+      // console.log(coordinatesToNumbers);
 
       const staffList = staff.split(",");
       let staffArray = [];
@@ -77,28 +78,31 @@ const CreateHotel = () => {
         staffArray.push(staffList[i].trim());
       }
    
-      const hotelLocation = {
-        coordinates: [...coordinatesToNumbers],
-        address,
-      };
+      // const hotelLocation = {
+      //   coordinates: [...coordinatesToNumbers],
+      //   address,
+      // };
 
-      const resp = await axiosWithInterceptors.post(baseURL + "api/v1/hotels", {
+      const resp = await axiosWithInterceptors.post("/hotels", {
         name,
         city,
         type,
         description,
         detailedDescription,
-        hotelLocation,
-        closestTouristLocation,
-        distanceToClosestTouristLocation,
+        // hotelLocation,
+        // closestTouristLocation,
+        // distanceToClosestTouristLocation,
         manager,
         staff: staffArray,
       });
-      console.log(resp.data.data);
-      navigate("/hotels");
+      // console.log(resp.data.data);
+      const newlyCreatedHotel = {...resp.data.data}
+      let hotelsToDisplay = []
+      hotelsToDisplay.push(newlyCreatedHotel)
+      navigate("/searchhotelsresults", { state: {pathname, hotelsToDisplay} });
     } catch (err) {
       if (err.response.data.message) {
-        navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+        navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
       } else {
         navigate('/somethingwentwrong')
       }
@@ -158,8 +162,8 @@ const CreateHotel = () => {
                 {cityData?.map((selectedCity) => (
                   <option
                     style={{ textTransform: "capitalize" }}
-                    key={selectedCity._id}
-                    value={selectedCity._id}
+                    key={selectedCity.id_cities}
+                    value={selectedCity.id_cities}
                   >
                     {selectedCity.cityName}
                   </option>
@@ -180,8 +184,8 @@ const CreateHotel = () => {
                 {hotelTypeData?.map((selectedType) => (
                   <option
                     style={{ textTransform: "capitalize" }}
-                    key={selectedType._id}
-                    value={selectedType._id}
+                    key={selectedType.id_hotelTypes}
+                    value={selectedType.id_hotelTypes}
                   >
                     {selectedType.hotelType}
                   </option>
@@ -189,7 +193,7 @@ const CreateHotel = () => {
               </select>
             </div>
 
-            <div className="registerDiv">
+            {/* <div className="registerDiv">
               <label htmlFor="coordinates">Hotel Location Coordinates:</label>
               <input
                 id="coordinates"
@@ -199,8 +203,8 @@ const CreateHotel = () => {
                 autoComplete="off"
                 placeholder="latitude, longitude"
               />
-            </div>
-            <div className="registerDiv">
+            </div> */}
+            {/* <div className="registerDiv">
               <label htmlFor="address">Hotel address:</label>
               <input
                 id="address"
@@ -209,7 +213,7 @@ const CreateHotel = () => {
                 onChange={(e) => setAddress(e.target.value)}
                 autoComplete="off"
               />
-            </div>
+            </div> */}
             <div className="registerDiv">
               <label htmlFor="hotelDesc">Brief hotel description:</label>
               <textarea
@@ -234,7 +238,7 @@ const CreateHotel = () => {
                 {detailedDescription || ""}
               </textarea>
             </div>
-            <div className="registerDiv">
+            {/* <div className="registerDiv">
               <label htmlFor="touristLocation">
                 Name of closest tourist location:
               </label>
@@ -245,21 +249,21 @@ const CreateHotel = () => {
                 onChange={(e) => setClosestTouristLocation(e.target.value)}
                 autoComplete="off"
               />
-            </div>
-            <div className="registerDiv">
+            </div> */}
+            {/* <div className="registerDiv">
               <label htmlFor="distanceToTouristLocation">
                 Distance (in miles) to closest tourist location:
               </label>
               <input
                 id="distanceToTouristLocation"
-                type="text"
-                value={distanceToClosestTouristLocation || 0}
+                type="number"
+                value={distanceToClosestTouristLocation}
                 onChange={(e) =>
                   setDistanceToClosestTouristLocation(e.target.value)
                 }
                 autoComplete="off"
               />
-            </div>
+            </div> */}
             <div className="registerDiv">
               <label htmlFor="hotelManager">Hotel manager:</label>
               <input
@@ -287,8 +291,8 @@ const CreateHotel = () => {
                 !name ||
                 !city ||
                 !type ||
-                !coordinates ||
-                !address ||
+                // !coordinates ||
+                // !address ||
                 !description ||
                 !detailedDescription ||
                 !manager ||

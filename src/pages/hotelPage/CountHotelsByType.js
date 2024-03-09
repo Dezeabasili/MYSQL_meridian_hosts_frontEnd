@@ -16,13 +16,13 @@ const CountHotelsByTypes = () => {
       const displayData = async () => {
         setLoading(true);
         try {
-          const resp = await axios.get(baseURL + "api/v1/hotels/countbytype");
+          const resp = await axios.get("/hotels/countbytype");
           // console.log(resp.data.data);
           setHotelData([...resp.data.data]);
           setLoading(false)
         } catch (err) {
           if (err.response.data.message) {
-            navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+            navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
           } else {
             navigate('/somethingwentwrong')
           }
@@ -55,14 +55,25 @@ const CountHotelsByTypes = () => {
        />
       ) : (
         <>
-          {hotelData.map((hotelType) => (    
-            <div key={hotelType.hotelType}>
-              <h5> <span style={{"textTransform": "capitalize"}}>{hotelType.hotelType}</span></h5>
-              <p>{hotelType.numberOfHotels} {hotelType.numberOfHotels == 1 ? 'property' : 'properties'}</p>
-              <br />
-            </div>    
-          ))}
+          {hotelData.length > 0 ? (
+            <>
+            {hotelData.map((hotelType) => (    
+              <div key={hotelType.hotelType}>
+                <h5> <span style={{"textTransform": "capitalize"}}>{hotelType.hotelType}</span></h5>
+                <p>{hotelType.numberOfHotels} {hotelType.numberOfHotels == 1 ? 'property' : 'properties'}</p>
+                <br />
+              </div>    
+            ))}
+          </>
+          ) : (
+            <>
+              <p>No hotel in the database !!!</p>
+            </>
+          )
+
+          }
         </>
+        
       )}
     </div>
   );

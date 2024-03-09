@@ -35,29 +35,43 @@ const List = () => {
     validateCheckinDateValue,
   } = useSearchContext();
 
-  console.log(
-    "checkinDateValue, checkoutDateValue: ",
-    checkinDateValue,
-    checkoutDateValue
-  );
-  console.log(
-    "date[0].startDate, date[0].endDate: ",
-    date[0].startDate,
-    date[0].endDate
-  );
+  // console.log(
+  //   "checkinDateValue, checkoutDateValue: ",
+  //   checkinDateValue,
+  //   checkoutDateValue
+  // );
+  // console.log(
+  //   "date[0].startDate, date[0].endDate: ",
+  //   date[0].startDate,
+  //   date[0].endDate
+  // );
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const res = await axios.get(
-          baseURL + `api/v1/hotels?city=${destination}`
+          `/hotels?city=${destination}`
         );
         setHotelList([...res.data.data]);
 
-        const resp = await axios.get(baseURL + "api/v1/hotels/allcityrefs");
+        const resp = await axios.get("/hotels/allcityrefs");
         // console.log("hotels: ", resp.data.data);
-        setCityData([...resp.data.data]);
+
+        const resp2 = await axios.get("/hotels/countbycity");
+        // retrieve only cities with hotels
+        let cities = []
+        resp.data.data.forEach(element => {
+          resp2.data.data.forEach(cityWithData => {
+            if (element.id_cities == cityWithData.id_cities) {
+              cities.push(element)
+            }
+          })
+          
+        });
+
+        // setCityData([...resp.data.data]);
+        setCityData([...cities]);
 
         let split1;
         let split2;
@@ -78,7 +92,8 @@ const List = () => {
         setLoading(false);
       } catch (err) {
         if (err.response.data.message) {
-          navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+          navigate('/handleerror', {state: {message: err.response.data.message, path: "/"}})
+          // navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
         } else {
           navigate('/somethingwentwrong')
         }
@@ -107,15 +122,14 @@ const List = () => {
     }
   };
 
-  console.log(hotelList);
+  // console.log(hotelList);
 
   const handleClick = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await axios.get(
-        baseURL +
-          `api/v1/hotels/price?city=${destination}&min=${min}&max=${max}`
+        `hotels/price?city=${destination}&min=${min}&max=${max}`
       );
       setHotelList([...res.data.data]);
 
@@ -247,7 +261,7 @@ const List = () => {
                     />
                   </div>
 
-                  <button onClick={handleClick}>Search</button>
+                  <button style={{width: '100%'}} onClick={handleClick}>Search</button>
                 </div>
                 <div className="listResult">
                   <SearchItem

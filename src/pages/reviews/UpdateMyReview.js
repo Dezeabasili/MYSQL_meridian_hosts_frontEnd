@@ -2,10 +2,13 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAxiosInterceptors from "../../hooks/useAxiosWithInterceptors";
 import { baseURL } from "../../context/authContext";
+import Stars from "../../components/starRating/Stars";
 
-const CreateHotelType = () => {
- 
-  const [hotelType, setHotelType] = useState();
+const UpdateMyReview = () => {
+  const [review, setReview] = useState();
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+
   const axiosWithInterceptors = useAxiosInterceptors();
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,12 +16,13 @@ const CreateHotelType = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-
-      const resp = await axiosWithInterceptors.post("/hotels/createhoteltype", {
-        hotelType  
+      
+      const resp = await axiosWithInterceptors.patch(`/reviews/${location.state}`, {
+        rating,
+        review
       });
-      // console.log(resp.data.data);
-      navigate("/hotels");
+    //   console.log(resp.data.data);
+      navigate("/myreviews");
     } catch (err) {
       if (err.response.data.message) {
         navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
@@ -31,25 +35,28 @@ const CreateHotelType = () => {
   return (
     <div className="register">
       <form className="registerContainer" onSubmit={handleSubmit}>
-        <h3 className="registerTitle">Provide hotel type</h3>
+        <h3 className="registerTitle">Update review</h3>
 
         <div className="registerDiv">
-          <label htmlFor="cityName">Hotel type:</label>
-          <input
-            id="cityName"
-            type="text"
-            value={hotelType || ''}
-            onChange={(e) => setHotelType(e.target.value)}
+          <label htmlFor="review">Review:</label>
+          <textarea
+            id="review"
+            onChange={(e) => setReview(e.target.value)}
             autoComplete="off"
-          />
+            rows="5"
+            cols="30"
+          >
+            {review}
+          </textarea>
         </div>
-        
+        <div className="registerDiv">
+          <label htmlFor="rating">Rating:</label>
+          <Stars rating={rating} setRating={setRating} hover={hover} setHover={setHover} />
+        </div>
 
         <button
           className="signUpButton"
-          disabled={
-            !hotelType
-          }
+          disabled={!review && !rating}
         >
           Continue
         </button>
@@ -58,4 +65,4 @@ const CreateHotelType = () => {
   );
 };
 
-export default CreateHotelType;
+export default UpdateMyReview;

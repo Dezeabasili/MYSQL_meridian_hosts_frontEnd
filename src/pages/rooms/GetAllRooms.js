@@ -21,8 +21,8 @@ const GetAllRooms = () => {
               setRoomsList(location.state);
           
           } else {
-            const resp = await axiosWithInterceptors.get(baseURL + "api/v1/rooms");
-            console.log("rooms: ", resp.data.data);
+            const resp = await axiosWithInterceptors.get("/rooms");
+            // console.log("rooms: ", resp.data.data);
             setRoomsList([...resp.data.data]);
           }
   
@@ -47,7 +47,7 @@ const GetAllRooms = () => {
 
   const showSelectedRoom = (room_id) => {
     const roomToDisplay = roomsList.find(
-      (room) => room_id === room._id
+      (room) => room_id === room.id_roomStyleDescription
     );
     navigate(`/rooms/${room_id}`, { state: roomToDisplay });
   };
@@ -71,14 +71,14 @@ const GetAllRooms = () => {
           {roomsList.length > 0 ? (
             <>
               {roomsList?.map((room) => (
-                <div key={room._id}>
-                  <p>Room reference: {room._id}</p>
-                  <p>Hotel name: <span style={{"textTransform": "capitalize"}}>{room.hotel.name}</span></p>
+                <div key={room.id_roomStyleDescription}>
+                  <p>Room reference: {room.id_roomStyleDescription}</p>
+                  <p>Hotel name: <span style={{"textTransform": "capitalize"}}><strong>{room.hotel.name}</strong></span></p>
                   <p>Room title: <span style={{"textTransform": "capitalize"}}>{room.title}</span></p>
                   <p>Room price: ${room.price}</p>
                   <p>Room description: {room.description}</p>
                   <p>Maximum number of occupants: {room.maxPeople}</p>
-                  <button onClick={() => showSelectedRoom(room._id)} style={{marginTop: '5px'}}>
+                  <button onClick={() => showSelectedRoom(room.id_roomStyleDescription)} style={{marginTop: '5px'}}>
                     Show room details
                   </button>
                   <br />

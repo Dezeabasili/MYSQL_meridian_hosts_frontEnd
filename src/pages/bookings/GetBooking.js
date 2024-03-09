@@ -5,23 +5,23 @@ import { baseURL } from "../../context/authContext";
 
 const GetBooking = () => {
   const location = useLocation();
-  const bookingToDisplay = location?.state?.bookingToDisplay;
+  const bookingToDisplay = location.state?.bookingToDisplay;
   const axiosWithInterceptors = useAxiosInterceptors();
   const navigate = useNavigate();
   const pathname = location.pathname
 
   const deleteThisBooking = async () => {
     try {
-      await axiosWithInterceptors.delete(baseURL + `api/v1/bookings/${bookingToDisplay._id}`);
-      if (location.state.pathname === '/bookings') {
-        navigate("/bookings");
-      } else if (location.state.pathname === '/mybookings') {
+      await axiosWithInterceptors.delete(`/bookings/${bookingToDisplay.id_bookings}`);     
+      if (location.state?.pathname === '/mybookings') {
         navigate("/mybookings");
+      } else  {
+        navigate("/bookings");
       }
-      
+  
     } catch (err) {
-      if (err.response.data.message) {
-        navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+      if (err.response?.data?.message) {
+        navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
       } else {
         navigate('/somethingwentwrong')
       }
@@ -30,9 +30,9 @@ const GetBooking = () => {
 
   return (
     <div>
-      <p>Booking reference: {bookingToDisplay._id}</p>
+      <p>Booking reference: {bookingToDisplay.id_bookings}</p>
       <p>Customer name: <span style={{"textTransform": "capitalize"}}>{bookingToDisplay.user.name}</span></p>
-      <p>Hotel name: <span style={{"textTransform": "capitalize"}}>{bookingToDisplay.hotel.name}</span></p>
+      <p>Hotel name: <span style={{"textTransform": "capitalize"}}><strong>{bookingToDisplay.hotel.name}</strong></span></p>
       <p>Booking date: {format(new Date(bookingToDisplay.createdAt), "MMM/dd/yyyy,  hh:mm:ss bbb")}</p>
       {bookingToDisplay.bookingDetails.map((roomDetails) => (
         <div key={roomDetails.room_id}>

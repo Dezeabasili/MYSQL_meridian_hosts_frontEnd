@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import useAxiosInterceptors from "../../hooks/useAxiosWithInterceptors";
 import { baseURL } from "../../context/authContext";
 import {RotatingLines} from 'react-loader-spinner'
@@ -6,6 +7,8 @@ import {RotatingLines} from 'react-loader-spinner'
 const GetAllHotelTypesRef = () => {
   const [referenceList, setReferenceList] = useState();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
   const runOnce = useRef(false)
   const axiosWithInterceptors = useAxiosInterceptors();
 
@@ -15,14 +18,18 @@ const GetAllHotelTypesRef = () => {
         setLoading(true);
         try {
       
-            const resp = await axiosWithInterceptors.get(baseURL + "api/v1/hotels/allhoteltyperefs");
+            const resp = await axiosWithInterceptors.get("/hotels/allhoteltyperefs");
             // console.log("hotels: ", resp.data.data);
             setReferenceList([...resp.data.data]);
          
   
           setLoading(false);
         } catch (err) {
-          console.log(err.message);
+          if (err.response.data.message) {
+            navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
+          } else {
+            navigate('/somethingwentwrong')
+          }
         }
       };
   
@@ -57,7 +64,7 @@ const GetAllHotelTypesRef = () => {
               {referenceList?.map((hotelType) => (
                 <div key={hotelType._id}>
                   <p>Hotel Type: <span style={{"textTransform": "capitalize"}}>{hotelType.hotelType}</span></p>
-                  <p>Hotel Type reference: {hotelType._id}</p>                 
+                  <p>Hotel Type reference: {hotelType.id_hotelTypes}</p>                 
                   <br />
                 </div>
               ))}

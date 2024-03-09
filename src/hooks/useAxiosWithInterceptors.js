@@ -33,11 +33,11 @@ const useAxiosInterceptors = () => {
             let req = error.config
             if (error.response.status === 403 && !req.firstTime) {
                 req.firstTime = true
-                console.log('This is inside the Response Interceptor and above the request for new access token')
+                // console.log('This is inside the Response Interceptor and above the request for new access token')
                 // request new access token
-                const response = await axios2.get(baseURL + 'api/v1/auth/renew_access_token')
+                const response = await axios2.get('/auth/renew_access_token')
                 const newAccessToken = response.data.accessToken
-                console.log('This is inside the Response Interceptor and above the setAuth')
+                // console.log('This is inside the Response Interceptor and above the setAuth')
                 // update auth with new access token
                 setAuth((prevAuth) => {
                     return {

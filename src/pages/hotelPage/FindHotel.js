@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAxiosInterceptors from "../../hooks/useAxiosWithInterceptors";
+import axios from "axios";
 import { baseURL } from "../../context/authContext";
 import { RotatingLines } from "react-loader-spinner";
 
@@ -13,6 +14,7 @@ const FindHotel = () => {
   const axiosWithInterceptors = useAxiosInterceptors();
   const navigate = useNavigate();
   const location = useLocation();
+  const pathname = location.pathname
   const runOnce = useRef(false);
 
   useEffect(() => {
@@ -20,20 +22,32 @@ const FindHotel = () => {
       const references = async () => {
         setLoading(true);
         try {
-          const resp = await axiosWithInterceptors.get(baseURL + "api/v1/hotels/allcityrefs");
-          // console.log("hotels: ", resp.data.data);
-          setCityData([...resp.data.data]);
+          const resp = await axiosWithInterceptors.get("/hotels/allcityrefs");
 
-          const resp2 = await axiosWithInterceptors.get(
-            baseURL + "api/v1/hotels/allhoteltyperefs"
+          const resp2 = await axios.get("/hotels/countbycity");
+        // retrieve only cities with hotels
+        let cities = []
+        resp.data.data.forEach(element => {
+          resp2.data.data.forEach(cityWithData => {
+            if (element.id_cities == cityWithData.id_cities) {
+              cities.push(element)
+            }
+          })
+          
+        });
+          // console.log("hotels: ", resp.data.data);
+          setCityData([...cities]);
+
+          const resp3 = await axiosWithInterceptors.get(
+            "/hotels/allhoteltyperefs"
           );
           // console.log("hotels: ", resp.data.data);
-          setHotelTypeData([...resp2.data.data]);
+          setHotelTypeData([...resp3.data.data]);
 
           setLoading(false);
         } catch (err) {
           if (err.response.data.message) {
-            navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+            navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
           } else {
             navigate('/somethingwentwrong')
           }
@@ -52,13 +66,14 @@ const FindHotel = () => {
     e.preventDefault();
     try {
       const resp = await axiosWithInterceptors.get(
-        baseURL + `api/v1/hotels?cityref=${city}`
+        `/hotels?cityref=${city}`
       );
-      console.log(resp.data.data);
-      navigate("/hotels", { state: resp.data.data });
+      // console.log(resp.data.data);
+      const hotelsToDisplay = [...resp.data.data]
+      navigate("/searchhotelsresults", { state: {pathname, hotelsToDisplay} });
     } catch (err) {
       if (err.response.data.message) {
-        navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+        navigate('/handleerror', {state: {message: err.response?.data?.message, path: location.pathname}})
       } else {
         navigate('/somethingwentwrong')
       }
@@ -69,9 +84,9 @@ const FindHotel = () => {
   const handleSelectChange = (e) => {
     setCity(e.target.value);
   };
-  const handleSelectChange2 = (e) => {
-    setType(e.target.value);
-  };
+  // const handleSelectChange2 = (e) => {
+  //   setType(e.target.value);
+  // };
 
   return (
     <div className="register">
@@ -109,8 +124,8 @@ const FindHotel = () => {
                 {cityData?.map((selectedCity) => (
                   <option
                     style={{ textTransform: "capitalize" }}
-                    key={selectedCity._id}
-                    value={selectedCity._id}
+                    key={selectedCity.id_cities}
+                    value={selectedCity.id_cities}
                   >
                     {selectedCity.cityName}
                   </option>

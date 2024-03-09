@@ -23,6 +23,7 @@ const UploadMultipleFiles = () => {
     e.preventDefault();
 
     let urlArray = [];
+    let public_idArray = [];
     let photoCode;
     // check if user selected at least one file
     if (!filesList.length) {
@@ -68,51 +69,59 @@ const UploadMultipleFiles = () => {
       return;
     }
 
-
-    
-    if (fileCode === 'profilephoto') {
-      await photoUpdate("profilephotos", 0, urlArray)
-
-    }
-    else if (fileCode === 'hotelphoto') {
-      await photoUpdate("hotelphotos", 0, urlArray)
-
-    } else if (fileCode === 'roomphoto') {
-      
-        for (let i = 0; i < 6; i++) {
-          await photoUpdate("roomphotos", i, urlArray)
-        }
-
+    let numberOfFiles;
+    if (filesList.length > 6) {
+      numberOfFiles = 6
     } else {
-        for (let i = 0; i < filesList.length; i++) {
-          await photoUpdate("miscphotos", i, urlArray)
-        }
+      numberOfFiles = filesList.length
+    }
 
+    if (fileCode === "profilephoto") {
+      await photoUpdate("profilephotos", 0, urlArray, public_idArray);
+    } else if (fileCode === "hotelphoto") {
+      await photoUpdate("hotelphotos", 0, urlArray, public_idArray);
+    } else if (fileCode === "roomphoto") {
+      for (let i = 0; i < numberOfFiles; i++) {
+        await photoUpdate("roomphotos", i, urlArray, public_idArray);
+      }
+    } else if (fileCode === "cityphoto") {
+      await photoUpdate("cityphotos", 0, urlArray, public_idArray);
+    } else if (fileCode === "hoteltypephoto") {
+      await photoUpdate("hoteltypephotos", 0, urlArray, public_idArray);
+    } else {
+      for (let i = 0; i < filesList.length; i++) {
+        await photoUpdate("miscphotos", i, urlArray, public_idArray);
+      }
     }
 
     // console.log('urlArray: ', urlArray)
 
     try {
       const resp = await axiosWithInterceptors.post(
-        baseURL + "api/v1/auth/upload",
-        { urlArray, fileCode, id },
+        "/auth/upload",
+        { urlArray, fileCode, id, public_idArray },
         {
           withCredentials: true,
         }
       );
-
+      if (fileCode == "profilephoto") {
+        navigate("/users/myaccount")
+      }
     } catch (err) {
       if (err.response.data.message) {
-        navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+        navigate("/handleerror", {
+          state: {
+            message: err.response.data.message,
+            path: location.pathname,
+          },
+        });
       } else {
-        navigate('/somethingwentwrong')
+        navigate("/somethingwentwrong");
       }
     }
   };
 
-  
-
-  const photoUpdate = async (folderName, index, URLArray) => {
+  const photoUpdate = async (folderName, index, URLArray, idArray) => {
     // generate signature
     let photoURL;
     let timestamp;
@@ -120,7 +129,7 @@ const UploadMultipleFiles = () => {
 
     try {
       const resp = await axiosWithInterceptors.post(
-        baseURL + "api/v1/auth/generatesignature",
+        "/auth/generatesignature",
         { folder: folderName },
         {
           withCredentials: true,
@@ -131,12 +140,16 @@ const UploadMultipleFiles = () => {
       signature = resp.data.signature;
     } catch (err) {
       if (err.response.data.message) {
-        navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+        navigate("/handleerror", {
+          state: {
+            message: err.response.data.message,
+            path: location.pathname,
+          },
+        });
       } else {
-        navigate('/somethingwentwrong')
+        navigate("/somethingwentwrong");
       }
     }
-
 
     // populate FormData
 
@@ -153,7 +166,6 @@ const UploadMultipleFiles = () => {
       return { ...prev, started: true };
     });
 
-
     try {
       let cloudName = process.env.REACT_APP_CLOUD_NAME;
       let api = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
@@ -166,24 +178,31 @@ const UploadMultipleFiles = () => {
         },
       });
 
-      console.log("below 1 ");
+      const { secure_url, public_id } = res.data;
+      URLArray.push(secure_url);
+      idArray.push(public_id);
 
-      const { secure_url } = res.data;
-      URLArray.push(secure_url)
-
-      setMessage(`Upload successful, ${index + 1} ${index === 1 ? 'file' : 'files'} uploaded`);
+      setMessage(
+        `Upload successful, ${index + 1} ${
+          index === 1 ? "file" : "files"
+        } uploaded`
+      );
     } catch (err) {
       setMessage("upload failed");
       if (err.response.data.message) {
-        navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+        navigate("/handleerror", {
+          state: {
+            message: err.response.data.message,
+            path: location.pathname,
+          },
+        });
       } else {
-        navigate('/somethingwentwrong')
+        navigate("/somethingwentwrong");
       }
     }
 
-
     // send photo urls to backend
-  }
+  };
 
   return (
     <div>
@@ -221,9 +240,11 @@ const UploadMultipleFiles = () => {
       <span
         className="uploadFMulSpan"
         style={{ cursor: "pointer" }}
-        onClick={() => navigate(-1)}
+        // onClick={() => navigate(-1)}
+        onClick={() => navigate("/")}
       >
-        Return to previous page
+        {/* Return to previous page */}
+        Return to Home page
       </span>
     </div>
   );

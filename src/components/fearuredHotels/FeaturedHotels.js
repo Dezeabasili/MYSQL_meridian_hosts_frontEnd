@@ -27,7 +27,7 @@ const FeaturedHotels = () => {
       const loadPage = async () => {
         setLoading(true);
         try {
-          const resp = await axios.get(baseURL + "api/v1/hotels/countByType");
+          const resp = await axios.get("/hotels/countByType");
           setHotelsData([...resp.data.data]);
 
           if (ref.current <= 600) {
@@ -108,20 +108,20 @@ const FeaturedHotels = () => {
           <>
             <h3 className="hotelContainerTitle">Explore our hotels</h3>
             <div className="hotelList">
-              {hotelsToDisplay.map((hotel, index) => {
+              {hotelsToDisplay?.map((hotel, index) => {
                 return (
-                  <div className="hotelType" key={hotel.hotelType}>
+                  <div className="hotelType" key={hotel?.hotelType}>
                     <img
-                      src={hotel.photo}
+                      src={hotel?.photo}
                       alt=""
                       className="hotelImg"
                       width="200"
                       height="200"
                     />
-                    <h4 className="hotelTypeTitle">{hotel.hotelType}</h4>
+                    <h4 className="hotelTypeTitle">{hotel?.hotelType}</h4>
                     <h5 className="hotelTypeNum">
-                      {hotel.numberOfHotels}{" "}
-                      {hotel.numberOfHotels == 1 ? "property" : "properties"}
+                      {hotel?.numberOfHotels}{" "}
+                      {hotel?.numberOfHotels == 1 ? "property" : "properties"}
                     </h5>
                   </div>
                 );
