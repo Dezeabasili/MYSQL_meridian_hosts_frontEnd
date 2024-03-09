@@ -14,7 +14,7 @@ const CreateHotelType = () => {
     e.preventDefault();
     try {
 
-      const resp = await axiosWithInterceptors.post("/hotels/createhoteltype", {
+      const resp = await axiosWithInterceptors.post(baseURL + "api/v1/hotels/createhoteltype", {
         hotelType  
       });
       // console.log(resp.data.data);

@@ -31,7 +31,7 @@ const CreateRoom = () => {
       // console.log(roomNumbers);
 
 
-      const resp = await axiosWithInterceptors.post("/rooms", {
+      const resp = await axiosWithInterceptors.post(baseURL + "api/v1/rooms", {
         title,
         hotel,
         description,

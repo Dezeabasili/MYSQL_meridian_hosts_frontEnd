@@ -16,7 +16,7 @@ const CountHotelsByTypes = () => {
       const displayData = async () => {
         setLoading(true);
         try {
-          const resp = await axios.get("/hotels/countbytype");
+          const resp = await axios.get(baseURL + "api/v1/hotels/countbytype");
           // console.log(resp.data.data);
           setHotelData([...resp.data.data]);
           setLoading(false)

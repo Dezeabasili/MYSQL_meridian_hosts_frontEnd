@@ -33,7 +33,7 @@ const ChangePassword = () => {
     e.preventDefault();
     try {
       const response = await axiosWithInterceptors.post(
-        "/auth/changepassword",
+        baseURL + "api/v1/auth/changepassword",
         { currentPassword, password }
       );
       // console.log(response.data)

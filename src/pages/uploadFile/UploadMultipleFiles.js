@@ -98,7 +98,7 @@ const UploadMultipleFiles = () => {
 
     try {
       const resp = await axiosWithInterceptors.post(
-        "/auth/upload",
+        baseURL + "api/v1/auth/upload",
         { urlArray, fileCode, id, public_idArray },
         {
           withCredentials: true,
@@ -129,7 +129,7 @@ const UploadMultipleFiles = () => {
 
     try {
       const resp = await axiosWithInterceptors.post(
-        "/auth/generatesignature",
+        baseURL + "api/v1/auth/generatesignature",
         { folder: folderName },
         {
           withCredentials: true,

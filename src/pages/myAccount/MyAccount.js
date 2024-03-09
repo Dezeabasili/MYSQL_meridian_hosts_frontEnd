@@ -27,7 +27,7 @@ const MyAccount = () => {
         // console.log('profilePhoto: ', profilePhoto)
         setLoading(true);
         setRefresh(false);
-        const resp = await axiosWithInterceptors.get("/users/myaccount", {
+        const resp = await axiosWithInterceptors.get(baseURL + "api/v1/users/myaccount", {
           withCredentials: true,
         });
         setUserInfo({ ...resp.data.data });
@@ -69,7 +69,7 @@ const MyAccount = () => {
 
   const deletePhoto = async () => {
     try {
-      await axiosWithInterceptors.delete("/users/myaccount/deletemyphoto");
+      await axiosWithInterceptors.delete(baseURL + "api/v1/users/myaccount/deletemyphoto");
 
       setRefresh(true);
     } catch (err) {
@@ -88,8 +88,8 @@ const MyAccount = () => {
 
   const deleteAccount = async () => {
     try {
-      await axiosWithInterceptors.delete("/users/deletemyaccount");
-      await axios.get("/auth/logout", {
+      await axiosWithInterceptors.delete(baseURL + "api/v1/users/deletemyaccount");
+      await axios.get(baseURL + "api/v1/auth/logout", {
         withCredentials: true,
       });
       setAuth({});

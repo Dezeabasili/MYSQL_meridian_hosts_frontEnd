@@ -30,7 +30,7 @@ const PasswordReset = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `/auth/resetpassword/${resettoken}/${user_id}`,
+        baseURL + `api/v1/auth/resetpassword/${resettoken}/${user_id}`,
         { password }
       );
 

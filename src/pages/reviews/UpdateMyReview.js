@@ -17,7 +17,7 @@ const UpdateMyReview = () => {
     e.preventDefault();
     try {
       
-      const resp = await axiosWithInterceptors.patch(`/reviews/${location.state}`, {
+      const resp = await axiosWithInterceptors.patch(baseURL + `api/v1/reviews/${location.state}`, {
         rating,
         review
       });

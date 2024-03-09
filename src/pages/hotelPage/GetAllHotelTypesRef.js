@@ -18,7 +18,7 @@ const GetAllHotelTypesRef = () => {
         setLoading(true);
         try {
       
-            const resp = await axiosWithInterceptors.get("/hotels/allhoteltyperefs");
+            const resp = await axiosWithInterceptors.get(baseURL + "api/v1/hotels/allhoteltyperefs");
             // console.log("hotels: ", resp.data.data);
             setReferenceList([...resp.data.data]);
          

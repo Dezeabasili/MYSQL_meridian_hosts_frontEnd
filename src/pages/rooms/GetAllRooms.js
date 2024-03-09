@@ -21,7 +21,7 @@ const GetAllRooms = () => {
               setRoomsList(location.state);
           
           } else {
-            const resp = await axiosWithInterceptors.get("/rooms");
+            const resp = await axiosWithInterceptors.get(baseURL + "api/v1/rooms");
             // console.log("rooms: ", resp.data.data);
             setRoomsList([...resp.data.data]);
           }

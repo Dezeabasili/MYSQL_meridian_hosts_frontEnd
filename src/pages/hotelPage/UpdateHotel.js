@@ -30,12 +30,12 @@ const UpdateHotel = () => {
         setLoading(true);
         setError(null);
         try {
-          const resp = await axiosWithInterceptors.get("/hotels/allcityrefs");
+          const resp = await axiosWithInterceptors.get(baseURL + "api/v1/hotels/allcityrefs");
           // console.log("hotels: ", resp.data.data);
           setCityData([...resp.data.data]);
 
           const resp2 = await axiosWithInterceptors.get(
-            "/hotels/allhoteltyperefs"
+            baseURL + "api/v1/hotels/allhoteltyperefs"
           );
           // console.log("hotels: ", resp.data.data);
           setHotelTypeData([...resp2.data.data]);
@@ -63,7 +63,7 @@ const UpdateHotel = () => {
 
     try {
       const resp = await axiosWithInterceptors.patch(
-        `/hotels/${location.state}`,
+        baseURL + `api/v1/hotels/${location.state}`,
         {
           name,
           city,

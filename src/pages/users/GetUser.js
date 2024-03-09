@@ -34,7 +34,7 @@ const GetUser = () => {
 
   const deleteThisUser = async () => {
     try {
-      await axiosWithInterceptors.delete(`/users/${userToDisplay._id}`);
+      await axiosWithInterceptors.delete(baseURL + `api/v1/users/${userToDisplay._id}`);
       navigate("/users");
     } catch (err) {
       if (err.response.data.message) {

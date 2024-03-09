@@ -19,7 +19,7 @@ const Login = () => {
    
     try {
       const response = await axios.post(
-        "/auth/login",
+        baseURL + "api/v1/auth/login",
         { username, password },
         { withCredentials: true }
       );

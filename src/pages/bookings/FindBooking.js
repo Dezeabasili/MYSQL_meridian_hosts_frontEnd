@@ -15,7 +15,7 @@ const FindBooking = () => {
     e.preventDefault();
     try {
       const resp = await axiosWithInterceptors.post(
-        "/bookings/findbooking",
+        baseURL + "api/v1/bookings/findbooking",
         { booking_id: bookingRef, email }
       );
       // console.log(resp.data.data);

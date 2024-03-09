@@ -3,7 +3,7 @@ import { useState, createContext, useContext } from "react";
 const AuthContext = createContext()
 
 // export const baseURL = "http://localhost:4000/"
-export const baseURL = "https://meridianhomes-backend.onrender.com/"
+export const baseURL = "https://mysql-meridian-hosts-backend.onrender.com/"
 
 export const useAuthContext = () => {
     return useContext(AuthContext)

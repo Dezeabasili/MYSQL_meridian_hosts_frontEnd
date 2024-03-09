@@ -24,7 +24,7 @@ const MyReviews = () => {
           if (location.state) {
             setReviewsList(location.state);
           } else {
-            const resp = await axiosWithInterceptors.get("/reviews/myreviews");
+            const resp = await axiosWithInterceptors.get(baseURL + "api/v1/reviews/myreviews");
             // console.log("reviews: ", resp.data.data);
             setReviewsList([...resp.data.data]);
           }
@@ -54,7 +54,7 @@ const MyReviews = () => {
 
   const deleteMyReview = async (review_id) => {
     try {
-      await axiosWithInterceptors.delete(`/reviews/${review_id}`)
+      await axiosWithInterceptors.delete(baseURL + `api/v1/reviews/${review_id}`)
       setRefresh(true)
     } catch (err) {
       if (err.response?.data?.message) {

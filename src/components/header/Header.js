@@ -44,9 +44,9 @@ const Header = ({ type }) => {
         setDestination("");
 
         try {
-          const resp = await axios.get("/hotels/allcityrefs");
+          const resp = await axios.get(baseURL + "api/v1/hotels/allcityrefs");
           // console.log("hotels: ", resp.data.data);
-          const resp2 = await axios.get("/hotels/countbycity");
+          const resp2 = await axios.get(baseURL + "api/v1/hotels/countbycity");
           // retrieve only cities with hotels
           let cities = []
           resp.data.data.forEach(element => {

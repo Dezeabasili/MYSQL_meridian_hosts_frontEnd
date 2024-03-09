@@ -22,7 +22,7 @@ const GetAllUsers = () => {
               // console.log('location.state: ', location.state)
           
           } else {
-            const resp = await axiosWithInterceptors.get("/users");
+            const resp = await axiosWithInterceptors.get(baseURL + "api/v1/users");
             // console.log("users: ", resp.data.data);
             setUsersList([...resp.data.data]);
           }

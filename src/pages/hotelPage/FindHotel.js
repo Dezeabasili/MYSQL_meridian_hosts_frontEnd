@@ -22,9 +22,9 @@ const FindHotel = () => {
       const references = async () => {
         setLoading(true);
         try {
-          const resp = await axiosWithInterceptors.get("/hotels/allcityrefs");
+          const resp = await axiosWithInterceptors.get(baseURL + "api/v1/hotels/allcityrefs");
 
-          const resp2 = await axios.get("/hotels/countbycity");
+          const resp2 = await axios.get(baseURL + "api/v1/hotels/countbycity");
         // retrieve only cities with hotels
         let cities = []
         resp.data.data.forEach(element => {
@@ -39,7 +39,7 @@ const FindHotel = () => {
           setCityData([...cities]);
 
           const resp3 = await axiosWithInterceptors.get(
-            "/hotels/allhoteltyperefs"
+            baseURL + "api/v1/hotels/allhoteltyperefs"
           );
           // console.log("hotels: ", resp.data.data);
           setHotelTypeData([...resp3.data.data]);
@@ -66,7 +66,7 @@ const FindHotel = () => {
     e.preventDefault();
     try {
       const resp = await axiosWithInterceptors.get(
-        `/hotels?cityref=${city}`
+        baseURL + `api/v1/hotels?cityref=${city}`
       );
       // console.log(resp.data.data);
       const hotelsToDisplay = [...resp.data.data]

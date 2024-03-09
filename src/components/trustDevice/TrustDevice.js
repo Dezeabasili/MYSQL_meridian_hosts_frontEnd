@@ -22,7 +22,7 @@ const TrustDevice = () => {
         setLoading(true);
         try {
           if (trustThisDevice) {
-            const res = await axios.get("/auth/renew_access_token", {
+            const res = await axios.get(baseURL + "api/v1/auth/renew_access_token", {
               withCredentials: true,
             });
             const accessToken = res.data.accessToken;

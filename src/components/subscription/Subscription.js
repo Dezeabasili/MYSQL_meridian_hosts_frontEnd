@@ -15,7 +15,7 @@ const Subscription = () => {
       }
     e.preventDefault();
     try {
-        await axios.post('/users/subscriptions', {email})
+        await axios.post(baseURL + "api/v1/users/subscriptions", {email})
         setEmail('Thank you for subscribing')
     } catch (err) {
         navigate('/register')

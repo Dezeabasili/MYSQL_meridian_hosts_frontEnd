@@ -14,6 +14,7 @@ const Cities = () => {
   const [slide3, setSlide3] = useState(2);
   const [hotelsData, setHotelsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  
   const runOnce = useRef(false);
 
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Cities = () => {
       const loadPage = async () => {
         setLoading(true);
         try {
-          const resp = await axios.get("/hotels/countByCity");
+          const resp = await axios.get(baseURL + "api/v1/hotels/countByCity");
           // console.log("resp.data: ", resp.data.data);
           setHotelsData([...resp.data.data]);
           setLoading(false);

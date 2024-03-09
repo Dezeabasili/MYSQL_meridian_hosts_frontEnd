@@ -12,7 +12,7 @@ const GetBooking = () => {
 
   const deleteThisBooking = async () => {
     try {
-      await axiosWithInterceptors.delete(`/bookings/${bookingToDisplay.id_bookings}`);     
+      await axiosWithInterceptors.delete(baseURL + `api/v1/bookings/${bookingToDisplay.id_bookings}`);     
       if (location.state?.pathname === '/mybookings') {
         navigate("/mybookings");
       } else  {

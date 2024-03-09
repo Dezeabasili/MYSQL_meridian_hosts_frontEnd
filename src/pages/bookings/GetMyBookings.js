@@ -24,7 +24,7 @@ const GetMyBookings = () => {
         setLoading(true);
         setRefresh(false)
         try {
-          const resp = await axiosWithInterceptors.get("/bookings/mybookings");
+          const resp = await axiosWithInterceptors.get(baseURL + "api/v1/bookings/mybookings");
           // console.log("my bookings: ", resp.data.data);
           setBookingsList([...resp.data.data]);
 
