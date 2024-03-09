@@ -36,14 +36,14 @@ const Hotel = () => {
   // console.log("selectedRooms: ", selectedRooms);
   // console.log(roomOptions)
 
+
+
+  
   useEffect(() => {
     let isMounted = true;
-    if (runOnce.current === false) {
-      // let isMounted = true;
     const hotelData = async () => {
       try {
         setLoading(true);
-        // const res = await axiosWithInterceptors.get(`/hotels/${hotel_id}`);
         const res = await axiosWithInterceptors.get(baseURL + `api/v1/hotels/${hotel_id}`);
         // console.log('res.data.data: ', res.data.data)
         setHotelInfo({ ...res.data.data });
@@ -54,7 +54,6 @@ const Hotel = () => {
 
         setRoomInfo([...res2.data.data]);
         const roomStyleArr = res2.data.data
-        // console.log("roomStyleArr: ", roomStyleArr)
 
           let arr = []
           roomStyleArr.forEach(roomStyle => {
@@ -69,10 +68,9 @@ const Hotel = () => {
 
           setSlides([...arr])
 
-        // isMounted && setLoading(false);
-        setLoading(false);
+        isMounted && setLoading(false);
       } catch (err) {
-        if (err.response.data.message) {
+        if (err.response?.data?.message) {
           navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
         } else {
           navigate('/somethingwentwrong')
@@ -82,15 +80,69 @@ const Hotel = () => {
 
     hotelData();
 
-    }
-    
-
     return () => {
       isMounted = false;
-      runOnce.current = true;
     };
   }, [hotel_id, axiosWithInterceptors]);
-  // }, []);
+
+
+
+
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   if (runOnce.current === false) {
+  //     // let isMounted = true;
+  //   const hotelData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       // const res = await axiosWithInterceptors.get(`/hotels/${hotel_id}`);
+  //       const res = await axiosWithInterceptors.get(baseURL + `api/v1/hotels/${hotel_id}`);
+  //       // console.log('res.data.data: ', res.data.data)
+  //       setHotelInfo({ ...res.data.data });
+
+  //       const res2 = await axiosWithInterceptors.get(
+  //         baseURL + `api/v1/hotels/room/${hotel_id}`
+  //       );
+
+  //       setRoomInfo([...res2.data.data]);
+  //       const roomStyleArr = res2.data.data
+  //       // console.log("roomStyleArr: ", roomStyleArr)
+
+  //         let arr = []
+  //         roomStyleArr.forEach(roomStyle => {
+  //           let Obj = {}
+  //           Obj.length = roomStyle.photos.length
+  //           if (roomStyle.photos.length) {
+  //             Obj.slideNumber = 0
+  //           }
+  //           arr.push(Obj)
+            
+  //         })
+
+  //         setSlides([...arr])
+
+  //       // isMounted && setLoading(false);
+  //       setLoading(false);
+  //     } catch (err) {
+  //       if (err.response.data.message) {
+  //         navigate('/handleerror', {state: {message: err.response.data.message, path: location.pathname}})
+  //       } else {
+  //         navigate('/somethingwentwrong')
+  //       }
+  //     }
+  //   };
+
+  //   hotelData();
+
+  //   }
+    
+
+  //   return () => {
+  //     isMounted = false;
+  //     runOnce.current = true;
+  //   };
+  // }, [hotel_id, axiosWithInterceptors]);
+  // // }, []);
 
 
   const handleSlider = (ind) => {
