@@ -17,7 +17,7 @@ const GetAllBookings = () => {
   const pathname = location.pathname;
 
   useEffect(() => {
-    // if (runOnce.current === false) {
+    if (runOnce.current === false) {
     const bookings = async () => {
       setLoading(true);
       setRefresh(false);
@@ -42,12 +42,12 @@ const GetAllBookings = () => {
     };
 
     bookings();
-    // }
+    }
 
-    // return () => {
-    //   runOnce.current = true;
-    //   setRefresh(true)
-    // };
+    return () => {
+      runOnce.current = true;
+      setRefresh(true)
+    };
   }, [refresh, setRefresh]);
 
   const showSelectedBooking = (booking_id) => {

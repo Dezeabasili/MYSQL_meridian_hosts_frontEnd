@@ -73,7 +73,7 @@ const ReserveRoom = ({
 
     let reservationDays = [];
 
-    while (startDate < lastDate) {
+    while (startDate <= lastDate) {
       reservationDays.push(format(new Date(startDate), "yyyy-MM-dd"));
       // increase the day by 1
       startDate.setDate(startDate.getDate() + 1);
