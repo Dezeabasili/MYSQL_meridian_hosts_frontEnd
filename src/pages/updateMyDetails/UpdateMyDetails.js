@@ -62,7 +62,7 @@ const UpdateMyDetails = () => {
     e.preventDefault();
     try {
       const response = await axiosWithInterceptors.patch(
-        baseURL + "api/v1users/updatemyaccount",
+        baseURL + "api/v1/users/updatemyaccount",
         { name, username, email }
       );
 
