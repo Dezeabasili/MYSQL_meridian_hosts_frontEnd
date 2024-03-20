@@ -112,9 +112,6 @@ const GetAllBookings = () => {
                       new Date(booking.createdAt),
                       "MMM/dd/yyyy,  hh:mm:ss bbb"
                     )}
-                    {
-                      ChicagoDateAndTime(booking.createdAt)
-                    }
                   </p>
                   <button
                     onClick={() => showSelectedBooking(booking.id_bookings)}
