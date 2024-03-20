@@ -183,7 +183,7 @@ const GetRoom = () => {
                     (unavailableDate, index) => (
                       <div key={index}>
                         <p>
-                          {format(new Date(unavailableDate), "MMM/dd/yyyy")}
+                          {unavailableDate}
                         </p>
                       </div>
                     )
