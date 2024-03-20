@@ -16,6 +16,20 @@ const GetAllBookings = () => {
   const axiosWithInterceptors = useAxiosInterceptors();
   const pathname = location.pathname;
 
+  const ChicagoDateAndTime = (givenDate) => {
+    return new Intl.DateTimeFormat('en-US', {
+      dateStyle: 'full',
+      timeStyle: 'long',
+      timeZone: 'CST',
+    }).format(givenDate)
+  }
+
+  // const bookingDate = new Intl.DateTimeFormat('en-US', {
+  //   dateStyle: 'full',
+  //   timeStyle: 'long',
+  //   timeZone: 'CST',
+  // }).format(newBooking.createdAt)
+
   useEffect(() => {
     if (runOnce.current === false) {
     const bookings = async () => {
@@ -98,6 +112,9 @@ const GetAllBookings = () => {
                       new Date(booking.createdAt),
                       "MMM/dd/yyyy,  hh:mm:ss bbb"
                     )}
+                    {
+                      ChicagoDateAndTime(booking.createdAt)
+                    }
                   </p>
                   <button
                     onClick={() => showSelectedBooking(booking.id_bookings)}
