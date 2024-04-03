@@ -172,26 +172,7 @@ const GetRoom = () => {
 
           {auth.assignedRoles == 2030 && (
             <>
-              <hr />
-              {roomToDisplay.roomNumbers?.map((roomNumber) => (
-                <div key={roomNumber._id}>
-                  <br />
-                  <h5>Room number: {roomNumber.number}</h5>
-
-                  <p>Unavailable dates:</p>
-                  {roomNumber.unavailableDates?.map(
-                    (unavailableDate, index) => (
-                      <div key={index}>
-                        <p>
-                          {unavailableDate}
-                        </p>
-                      </div>
-                    )
-                  )}
-                </div>
-              ))}
-              <br />
-
+              {/* <hr /> */}
               <button
                 onClick={() => {
                   updateThisRoom();
@@ -218,6 +199,29 @@ const GetRoom = () => {
               >
                 Delete room
               </button>
+
+              <br />
+
+              {roomToDisplay.roomNumbers?.map((roomNumber) => (
+                <div key={roomNumber._id}>
+                  <br />
+                  <h5>Room number: {roomNumber.number}</h5>
+
+                  <p>Unavailable dates:</p>
+                  {roomNumber.unavailableDates?.map(
+                    (unavailableDate, index) => (
+                      <div key={index}>
+                        <p>
+                          {unavailableDate}
+                        </p>
+                      </div>
+                    )
+                  )}
+                </div>
+              ))}
+              
+
+             
             </>
           )}
         </>
