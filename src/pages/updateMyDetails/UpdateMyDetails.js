@@ -71,7 +71,7 @@ const UpdateMyDetails = () => {
       setUsername("");
       setEmail("");
 
-      navigate("/login");
+      navigate("/users/myaccount");
     } catch (err) {
       if (err.response.data.message) {
         navigate("/handleerror", {

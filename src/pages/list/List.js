@@ -129,7 +129,7 @@ const List = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        baseURL + `api/v1hotels/price?city=${destination}&min=${min}&max=${max}`
+        baseURL + `api/v1/hotels/price?city=${destination}&min=${min}&max=${max}`
       );
       setHotelList([...res.data.data]);
 
