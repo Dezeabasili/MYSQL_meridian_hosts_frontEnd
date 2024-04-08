@@ -10,6 +10,13 @@ const GetBooking = () => {
   const navigate = useNavigate();
   const pathname = location.pathname
 
+  // function to format date
+const formatDate2 = (value) => {
+  const date2 = new Date(value).toISOString()
+  const splitDate = date2.split('T')
+  return splitDate[0];
+}
+
   const deleteThisBooking = async () => {
     try {
       await axiosWithInterceptors.delete(baseURL + `api/v1/bookings/${bookingToDisplay.id_bookings}`);     
@@ -40,8 +47,8 @@ const GetBooking = () => {
           <p>Room type: <span style={{"textTransform": "capitalize"}}>{roomDetails.room_type}</span></p>
           <p>Price per night: ${roomDetails.price_per_night}</p>
           <p>Room number: {roomDetails.roomNumber}</p>
-          <p>Check-in date: {format(new Date(roomDetails.checkin_date), "MMM/dd/yyyy")}</p>
-          <p>Check-out date: {format(new Date(roomDetails.checkout_date), "MMM/dd/yyyy")}</p>
+          <p>Check-in date: {formatDate2(roomDetails.checkin_date)}</p>
+          <p>Check-out date: {formatDate2(roomDetails.checkout_date)}</p>
           <p>Number of nights: {roomDetails.number_of_nights}</p>
         </div>
       ))}
