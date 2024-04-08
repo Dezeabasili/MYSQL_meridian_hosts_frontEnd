@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import useAxiosInterceptors from "../../hooks/useAxiosWithInterceptors";
+import { formatDate } from "./bookings_Utility_Functions"
 import { baseURL } from "../../context/authContext";
 
 const GetBooking = () => {
@@ -47,8 +48,8 @@ const formatDate2 = (value) => {
           <p>Room type: <span style={{"textTransform": "capitalize"}}>{roomDetails.room_type}</span></p>
           <p>Price per night: ${roomDetails.price_per_night}</p>
           <p>Room number: {roomDetails.roomNumber}</p>
-          <p>Check-in date: {formatDate2(roomDetails.checkin_date)}</p>
-          <p>Check-out date: {formatDate2(roomDetails.checkout_date)}</p>
+          <p>Check-in date: {formatDate(roomDetails.checkin_date)}</p>
+          <p>Check-out date: {formatDate(roomDetails.checkout_date)}</p>
           <p>Number of nights: {roomDetails.number_of_nights}</p>
         </div>
       ))}

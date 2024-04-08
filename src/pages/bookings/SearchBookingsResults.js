@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import "./getAllBookings.css";
+import { formatDate } from "./bookings_Utility_Functions"
 
 const SearchBookingsResults = () => {
   const navigate = useNavigate();
